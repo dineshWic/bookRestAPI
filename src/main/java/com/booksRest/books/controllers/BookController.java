@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping(value = "api/v1")
 public class BookController {
     private final BookService bookService;
 
@@ -43,8 +44,14 @@ public class BookController {
     }
 
     @GetMapping(path = "/books")
-    public ResponseEntity<List<Book>> listBooks(){
-        return new ResponseEntity<List<Book>>(bookService.listBooks(),HttpStatus.OK);
+    public ResponseEntity<?>listBooks(){
+        List<Book> bookList = bookService.listBooks();
+        if(!bookList.isEmpty()) {
+            return new ResponseEntity<>(bookList, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>("No books found", HttpStatus.OK);
+        }
     }
 
     @DeleteMapping(path = "/books/{isbn}")
